@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.titv.spring.StudentManagement.dao.StudentDAO;
 import vn.titv.spring.StudentManagement.entity.Student;
+import vn.titv.spring.StudentManagement.exception.StudentException;
 import vn.titv.spring.StudentManagement.service.StudentService;
 
 import java.util.List;
@@ -61,42 +62,56 @@ public class StudentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable int id) {
-        Student found = this.studentService.getStudentById(id);
-        if (found != null) {
-            return ResponseEntity.ok(found);
-        } else {
-            return ResponseEntity.notFound().build();
+        Student found = null;
+        try {
+            found = this.studentService.getStudentById(id);
+        } catch (Exception e) {
+            throw new StudentException(e.getMessage());
         }
+
+        if (found == null) {
+            throw new StudentException("student " + id + " not found");
+        }
+        return ResponseEntity.ok(found);
     }
 
     @PostMapping
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-        student.setId(0);
-        student = this.studentService.addStudent(student);
-        return ResponseEntity.status(HttpStatus.CREATED).body(student);
+        try {
+            student.setId(0);
+            student = this.studentService.addStudent(student);
+            return ResponseEntity.status(HttpStatus.CREATED).body(student);
+        } catch (Exception e) {
+            throw new StudentException(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Student> updateStudent(@PathVariable int id, @RequestBody Student student) {
         Student found = this.studentService.getStudentById(id);
-        if (found != null) {
+        if (found == null) {
+            throw new StudentException("student " + id + " not found");
+        }
+        try {
             student.setId(id);
             student = this.studentService.updateStudent(student);
             return ResponseEntity.status(HttpStatus.OK).body(student);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            throw new StudentException(e.getMessage());
         }
-
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteStudent(@PathVariable int id) {
         Student found = this.studentService.getStudentById(id);
-        if (found != null) {
+        if (found == null) {
+            throw new StudentException("student " + id + " not found");
+        }
+        try {
             this.studentService.deleteStudentBydId(id);
             return ResponseEntity.status(HttpStatus.OK).body("OK");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            throw new StudentException(e.getMessage());
         }
     }
 }
