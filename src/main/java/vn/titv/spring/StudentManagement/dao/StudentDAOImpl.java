@@ -32,14 +32,14 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    @Transactional
+//    @Transactional - bỏ, vì đã sài ở service
     public Student save(Student student) {
          this.entityManager.persist(student);
          return student;
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public Student saveAndFlush(Student student) {
         student = this.entityManager.merge(student);
         this.entityManager.flush();
@@ -47,7 +47,7 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public void deleteById(int id) {
         String jpql = "DELETE Student WHERE id=:id";
         Query query = this.entityManager.createQuery(jpql);
