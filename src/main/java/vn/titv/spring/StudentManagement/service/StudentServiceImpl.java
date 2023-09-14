@@ -47,6 +47,16 @@ public class StudentServiceImpl implements StudentService {
         this.studentRepository.deleteById(id);
     }
 
+    @Override
+    public List<Student> getAllStudentsNotFirstName(String firstName) {
+        return this.studentRepository.findByFirstNameNot(firstName);
+    }
+
+    @Override
+    public List<Student> getAllStudentsNotFirstName2(String firstName) {
+        return this.studentRepository.findByFirstNameNot2(firstName);
+    }
+
     // Giờ không cần dùng DAO chỗ này, vì đã có StudentRepository
 //    private StudentDAO studentDAO;
 //

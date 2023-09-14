@@ -83,6 +83,16 @@ public class StudentController {
         }
     }
 
+    // test extended query
+    @GetMapping("/not-first-name/{firstName}")
+    public List<Student> getStudentsNotFirstName(@PathVariable String firstName) {
+        return this.studentService.getAllStudentsNotFirstName(firstName);
+    }
+
+    @GetMapping("/not-first-name-2/{firstName}")
+    public List<Student> getStudentsNotFirstName2(@PathVariable String firstName) {
+        return this.studentService.getAllStudentsNotFirstName2(firstName);
+    }
 
     // Sử dụng DAO cơ bản
     //    private StudentDAO studentDAO;
